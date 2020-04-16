@@ -12,7 +12,7 @@ const NavBar = ({auth, profile}) => {
             <LinkContainer to='/'>
                 <Navbar.Brand href="/">
                 {
-                    profile.userName ? `Welcome ${profile.userName}` : 'Venilia Games'
+                    profile.username ? `Welcome ${profile.username}` : 'Venilia Games'
                 }
                 </Navbar.Brand>
             </LinkContainer>

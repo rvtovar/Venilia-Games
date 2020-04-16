@@ -7,7 +7,7 @@ export const createGame = (game) => {
 
         firebase.firestore().collection('games').add({
             ...game,
-            owner: `${profile.userName}`,
+            owner: `${profile.username}`,
             ownerId: ownerId,
             players: [ownerId]
         }).then(() => {

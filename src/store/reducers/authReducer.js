@@ -27,6 +27,7 @@ export default (state = initState,action) => {
                 ...state,
                 authError: action.err.message
             }
+
         default:
             return state
     }

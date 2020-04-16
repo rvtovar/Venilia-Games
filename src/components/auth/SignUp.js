@@ -7,19 +7,19 @@ import {signUp} from '../../store/actions/authActions'
 const SignUp = ({auth, authError, signUp}) => {
     let [email,setEmail] = useState('')
     let [password,setPassword] = useState('')
-    let [userName, setUserName] = useState('')
-    let [givenName, setGivenName] = useState('')
+    let [username, setUsername] = useState('')
+    let [name, setName] = useState('')
 
     const handleChange = (e) => {
         if(e.target.id === 'email') setEmail(e.target.value)
         else if(e.target.id === 'password') setPassword(e.target.value)
-        else if(e.target.id === 'userName') setUserName(e.target.value)
-        else if(e.target.id === 'givenName') setGivenName(e.target.value)
+        else if(e.target.id === 'username') setUsername(e.target.value)
+        else if(e.target.id === 'name') setName(e.target.value)
     }
     const onSubmit = (e) => {
         e.preventDefault()
         signUp({
-            email,password,userName,givenName
+            email,password,username,name
         })
     }
 
@@ -33,19 +33,19 @@ const SignUp = ({auth, authError, signUp}) => {
                     <Form.Control 
                         type="text" 
                         placeholder="Username"
-                        value={userName}
+                        value={username}
                         onChange={handleChange}
-                        id="userName"
+                        id="username"
                     />
                 </Form.Group>
                 <Form.Group>
-                    <Form.Label>Given Name</Form.Label>
+                    <Form.Label>Name</Form.Label>
                     <Form.Control 
                         type="text" 
-                        placeholder="Given Name"
-                        value={givenName}
+                        placeholder="Name"
+                        value={name}
                         onChange={handleChange}
-                        id="givenName"
+                        id="name"
                     />
                 </Form.Group>
                 <Form.Group>

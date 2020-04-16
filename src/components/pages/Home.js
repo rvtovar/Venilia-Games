@@ -4,7 +4,8 @@ import {Redirect} from 'react-router-dom'
 import {useFirestoreConnect, isEmpty,isLoaded} from 'react-redux-firebase'
 import {Container, Row, Col} from 'react-bootstrap'
 import GameList from '../games/GameList'
-import {Spinner} from 'react-bootstrap'
+import {Spinner, Button} from 'react-bootstrap'
+import {Link} from 'react-router-dom'
 
 const Home = ({auth}) => {
     useFirestoreConnect([
