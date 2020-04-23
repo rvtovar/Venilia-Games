@@ -1,32 +1,34 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { connect, useSelector} from 'react-redux'
 import {Redirect} from 'react-router-dom'
 import {useFirestoreConnect, isEmpty,isLoaded} from 'react-redux-firebase'
-import {Container, Row, Col} from 'react-bootstrap'
+import {MDBContainer,MDBRow,MDBCol} from 'mdbreact'
 import GameList from '../games/GameList'
-import {Spinner, Button} from 'react-bootstrap'
-import {Link} from 'react-router-dom'
+import {clearData} from '../../store/actions/gameActions'
 
-const Home = ({auth}) => {
+const Home = ({auth,clearData}) => {
     useFirestoreConnect([
-        {collection: 'games', where:['players', 'array-contains', `${auth.uid}`]}
+        {collection: 'games', where:['playerIds', 'array-contains', `${auth.uid}`]}
     ])
-    const games = useSelector(state => state.firestore.ordered.games)
+    useEffect(() => {
+        clearData()
+    },[clearData])
+    const userGames = useSelector(state => state.firestore.ordered.games)
 
 
     if(!auth.uid) return <Redirect to='/login' />
 
 
-    if (!isLoaded(games)) {
+    if (!isLoaded(userGames)) {
         return (
             <div className="spinner">
-                <Spinner animation="border"></Spinner>
+                <strong>Loading Games</strong>
             </div>
         )
       }
     
       // Show message if there are no todos
-    if (isEmpty(games)) {
+    if (isEmpty(userGames)) {
         return (
             <div className="spinner">
                 <h3>You have no current games.</h3>
@@ -34,26 +36,29 @@ const Home = ({auth}) => {
         )
     }
     return (
-        <Container>
-            <Row>
-                <Col>
-                    <h3 className="listTitle">Your Games</h3>
-                </Col>
-            </Row>
-            <Row>
-                <Col sm={12} md={12}>
+        <MDBContainer>
+            <MDBRow>
+                <MDBCol sm="12" md="6">
                     <GameList 
-                        games={games}
-                        title="Your Games"
+                        games={userGames}
+                        title="Recent Games"
                     />
-                </Col>
-            </Row>
-        </Container>
+                </MDBCol>
+                <MDBCol>
+                    <div className="game-list section">
+                        <p className="h3 text-center mb-4 listTitle">Upcoming Games</p>
+                    </div>
+                </MDBCol>
+            </MDBRow>
+        </MDBContainer>
     )
 }
 
 const mapStateToProps = (state) => ({
     auth: state.firebase.auth
 })
+const mapDispatchToProps = (dispatch) => ({
+    clearData: () => dispatch(clearData())
+})
 
-export default connect(mapStateToProps)(Home)
+export default connect(mapStateToProps, mapDispatchToProps)(Home)

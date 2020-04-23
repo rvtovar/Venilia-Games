@@ -1,26 +1,22 @@
-import React from 'react'
+import React, {useState} from 'react'
 import SignedInLinks from './SignedInLinks'
 import SignedOutLinks from './SignedOutLinks'
-import {Navbar} from 'react-bootstrap'
-import {LinkContainer} from 'react-router-bootstrap'
+import {MDBNavbar, MDBNavbarBrand, MDBNavbarToggler, MDBCollapse} from 'mdbreact'
 import { connect } from 'react-redux'
 
 const NavBar = ({auth, profile}) => {
+    const [isOpen, setIsOpen] = useState(false)
     const links = auth.uid ? <SignedInLinks profile={profile}/> : <SignedOutLinks />
     return (
-        <Navbar bg="dark" variant="dark" expand="lg">
-            <LinkContainer to='/'>
-                <Navbar.Brand href="/">
-                {
-                    profile.username ? `Welcome ${profile.username}` : 'Venilia Games'
-                }
-                </Navbar.Brand>
-            </LinkContainer>
-            <Navbar.Toggle aria-controls="basic-navbar-nav"/>
-            <Navbar.Collapse id="basic-navbar-nav">
+        <MDBNavbar dark expand="md" color="special-color">
+            <MDBNavbarBrand>
+               <strong> Venilia Games</strong>
+            </MDBNavbarBrand>
+            <MDBNavbarToggler onClick={() => setIsOpen(!isOpen)} />
+            <MDBCollapse isOpen={isOpen} id="navbarCollapse3" navbar>
                 {links}
-            </Navbar.Collapse>
-        </Navbar>
+            </MDBCollapse>
+        </MDBNavbar>
     )
 }
 

@@ -1,19 +1,23 @@
 import React from 'react'
-import {Card, Button} from 'react-bootstrap'
+import {MDBCard,MDBCardBody,MDBCardHeader, MDBBtn,MDBCardText,MDBRow,MDBCol} from 'mdbreact'
 import {LinkContainer} from 'react-router-bootstrap'
+import {ListItem} from '../components/Utils'
 
 const GameSummary = ({game}) => {
     return (
-        <Card className="gameCard">
-            <Card.Header>{game.system}</Card.Header>
-            <Card.Body>
-                <Card.Title>{game.title}</Card.Title>
-                <Card.Text>Created By {game.owner}</Card.Text>
-                <LinkContainer to={`/games/${game.id}`}>
-                    <Button variant="secondary">Join Game</Button>
-                </LinkContainer>
-            </Card.Body>
-        </Card>
+        <ListItem>
+            <MDBRow>
+                <MDBCol sm='5' xs='12' className="gameSummary">
+                        <p className="text-center mb-4 gameHeader">{game.title}</p>
+                        <p className="text-center mb-4">{game.genre}</p>
+                </MDBCol>
+                <MDBCol sm='7' xs='12' className="text-center gameButton">
+                    <LinkContainer to={`/games/${game.id}`}>
+                        <MDBBtn color="mdb-color" className="gameButton">Start Game</MDBBtn>
+                    </LinkContainer>
+                </MDBCol>
+            </MDBRow>
+        </ListItem>
     )
 }
 

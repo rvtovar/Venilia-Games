@@ -1,84 +1,65 @@
-import React, {useState} from 'react'
-import {Form, Button} from 'react-bootstrap'
-import {Redirect} from 'react-router-dom'
+import React, {useState,useEffect} from 'react'
+import {MDBContainer,MDBRow,MDBCol,MDBInput,MDBBtn} from 'mdbreact'
 import {connect} from 'react-redux'
-import {signUp} from '../../store/actions/authActions'
+import {signUp, clearAuthError} from '../../store/actions/authActions'
+import {Redirect} from 'react-router-dom'
 
-const SignUp = ({auth, authError, signUp}) => {
+const SignUp = ({authError, signUp, auth, clearAuthError}) => {
     let [email,setEmail] = useState('')
     let [password,setPassword] = useState('')
-    let [username, setUsername] = useState('')
-    let [name, setName] = useState('')
-
-    const handleChange = (e) => {
-        if(e.target.id === 'email') setEmail(e.target.value)
-        else if(e.target.id === 'password') setPassword(e.target.value)
-        else if(e.target.id === 'username') setUsername(e.target.value)
-        else if(e.target.id === 'name') setName(e.target.value)
+    let [firstName,setFirstName] = useState('')
+    let [lastName,setLastName] = useState('')
+    useEffect(() => {
+        return () => {
+            clearAuthError()
+        }
+    },[clearAuthError])
+    const handleChange = (value,type) => {
+        if(type === 'email') setEmail(value)
+        else if(type === 'password') setPassword(value)
+        else if(type === 'firstName') setFirstName(value)
+        else if(type === 'lastName') setLastName(value)
     }
     const onSubmit = (e) => {
         e.preventDefault()
-        signUp({
-            email,password,username,name
-        })
+        signUp({email,password,firstName,lastName})
     }
 
     if(auth.uid) return <Redirect to='/' />
     return (
-        <div className="container authForm">
-            <h3>Sign Up Today</h3>
-            <Form onSubmit={onSubmit}>
-                <Form.Group>
-                    <Form.Label>Username</Form.Label>
-                    <Form.Control 
-                        type="text" 
-                        placeholder="Username"
-                        value={username}
-                        onChange={handleChange}
-                        id="username"
-                    />
-                </Form.Group>
-                <Form.Group>
-                    <Form.Label>Name</Form.Label>
-                    <Form.Control 
-                        type="text" 
-                        placeholder="Name"
-                        value={name}
-                        onChange={handleChange}
-                        id="name"
-                    />
-                </Form.Group>
-                <Form.Group>
-                    <Form.Label>Email Address</Form.Label>
-                    <Form.Control 
-                        type="email" 
-                        placeholder="Enter Email"
-                        value={email}
-                        onChange={handleChange}
-                        id="email"
-                    />
-                </Form.Group>
-                <Form.Group>
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control 
-                        type="password" 
-                        placeholder="Password"
-                        value={password}
-                        onChange={handleChange}
-                        id="password"
-                    />
-                </Form.Group>
-                <Button variant="primary" type='submit'>
-                    Sign Up
-                </Button>
-                {
-                    authError && 
-                    (<div className="text-danger text-center">
-                        <p>{authError}</p>
-                    </div>)
-                }
-            </Form>
-        </div>
+        <MDBContainer>
+            <MDBRow>
+                <MDBCol md="12" sm="12">
+                <form className="authForm">
+                    <p className="h3 text-center mb-4">Sign up</p>
+                    <div className="grey-text">
+                    <MDBInput label="First Name" icon="dice" group type="text"  getValue={
+                        (fn) => handleChange(fn,'firstName')
+                    }/>
+                    <MDBInput label="Last Name" icon="dragon" group type="text" getValue={
+                        (ln) => handleChange(ln,'lastName')
+                    }/>
+                    <MDBInput label="Email" icon="envelope" group type="text"  getValue={
+                        (userEmail) => handleChange(userEmail,'email')
+                    }/>
+                    <MDBInput label="Password" icon="lock" group type="password" getValue={
+                        (pwd) => handleChange(pwd,'password')
+                    }/>
+                    </div>
+                    <div className="text-center">
+                    <MDBBtn color="mdb-color" onClick={onSubmit}>Register</MDBBtn>
+                    <br/>
+                    {
+                        authError && 
+                        (<div className="red-text center" style={{padding:10}}>
+                            <p>{authError}</p>
+                        </div>)
+                    }
+                    </div>
+                </form>
+                </MDBCol>
+            </MDBRow>
+        </MDBContainer>
     )
 }
 
@@ -88,7 +69,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    signUp: (newUser) => dispatch(signUp(newUser))
+    signUp: (newUser) => dispatch(signUp(newUser)),
+    clearAuthError: () => dispatch(clearAuthError())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignUp)

@@ -9,7 +9,6 @@ import SignIn from './components/auth/SignIn'
 import SignUp from './components/auth/SignUp'
 import NotFound from './components/pages/404'
 import NavBar from './components/layout/NavBar'
-import Search from './components/pages/Search'
 
 function App() {
   return (
@@ -19,7 +18,6 @@ function App() {
         <Switch>
           <Route component={Home} path="/" exact />
           <Route component={About} path='/about' />
-          <Route component={Search} path='/search' />
           <Route component={CreateGame} path='/create' />
           <Route component={EditGame} path='/games/edit/:id' />
           <Route component={GameDashboard} path='/games/:id' />

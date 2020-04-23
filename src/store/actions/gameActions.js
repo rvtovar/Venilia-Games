@@ -7,9 +7,9 @@ export const createGame = (game) => {
 
         firebase.firestore().collection('games').add({
             ...game,
-            owner: `${profile.username}`,
+            owner: profile.displayName,
             ownerId: ownerId,
-            players: [ownerId]
+            playerIds: [ownerId]
         }).then(() => {
             dispatch({
                 type: 'CREATE_GAME'
@@ -22,3 +22,7 @@ export const createGame = (game) => {
         })
     }
 }
+
+export const clearData = () => ({
+    type: '@@reduxFirestore/CLEAR_DATA'
+})

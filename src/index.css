@@ -22,20 +22,8 @@ form button, form h5{
 }
 
 
-input[type=text]:not(.browser-default):focus:not([readonly]),
-input[type=email]:not(.browser-default):focus:not([readonly]),
-input[type=password]:not(.browser-default):focus:not([readonly]){
-  border-color: purple;
-  box-shadow: none;
-}
-
-.authForm textarea:focus {
-  border-color:purple;
-  box-shadow: none;
-}
-
 .authForm select:focus {
-  border-color:purple;
+  border-color:'#000080';
   box-shadow: none;
 }
 
@@ -58,10 +46,62 @@ input[type=password]:not(.browser-default):focus:not([readonly]){
 
 .listTitle{
   text-align: center;
-  margin-top: 15px;
+  margin-top: 25px;
 
 }
 
 .searchbar{
   margin-top: 15px;
+}
+
+.custom-setup{
+  border-style: none;
+  border-bottom-style: solid;
+  width: 200 ;
+}
+
+.custom-setup option{
+  font-style: italic;
+  border-style: none;
+}
+
+.gameSummary{
+  margin: 20px auto auto auto;
+  text-align: center;
+}
+
+.gameButton{
+  margin: auto;
+}
+
+.gameHeader{
+  font-weight: 600;
+}
+
+.list-overflow-container {
+  max-height: 545px;
+  border: 1px #DDDDDD solid;
+  border-radius: 4px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.list-overflow-container ul {
+  margin: 0;
+}
+
+.list-overflow-container li {
+  border-radius: 0px;
+  border-left: none;
+  border-right: none;
+}
+
+
+
+.list-overflow-container li:first-child {
+  border-top: none;
+}
+
+.list-overflow-container li:last-child {
+  border-bottom: none;
 }

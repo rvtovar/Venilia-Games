@@ -1,65 +1,74 @@
 import React,{useState} from 'react'
-import {Form,Button} from 'react-bootstrap'
+import {MDBContainer,MDBRow,MDBCol,MDBInput,MDBBtn, MDBIcon} from 'mdbreact'
 
 
 const GameForm = ({gameSubmit}) => {
     let [title, setTitle] = useState('')
-    let [content, setContent] = useState('')
-    let [system, setSystem] = useState('Numenera')
-    const handleChange = (e) => {
-        if(e.target.id === 'title') setTitle(e.target.value)
-        else if(e.target.id === 'content') setContent(e.target.value)
-        else if(e.target.id === 'system') setSystem(e.target.value)
+    let [description, setDescription] = useState('')
+    let [genre, setGenre] = useState('Genre')
+    let [error,setError] = useState('')
+    const handleChange = (value,type) => {
+        if(type === 'title') setTitle(value)
+        else if(type === 'description') setDescription(value)
+        else if(type === 'genre') setGenre(value)
     }
     const onSubmit = (e) => {
         e.preventDefault()
-        gameSubmit({
-            title,
-            system,
-            content
-        })
+        if(!title || genre === 'Genre'){
+            setError('All games must include a title and genre')
+        }else{
+            gameSubmit({
+                title,
+                genre,
+                description
+            })
+        }
     }
 
-    return(
-        <div className="container authForm">
-            <h3>Create A New Game</h3>
-            <Form onSubmit={onSubmit}>
-                <Form.Group>
-                    <Form.Label>New Game Title</Form.Label>
-                    <Form.Control 
-                        type="text" 
-                        placeholder="Game Title"
-                        value={title}
-                        onChange={handleChange}
-                        id="title"
-                    />
-                </Form.Group>
-                <Form.Group>
-                    <Form.Label>System Select</Form.Label>
-                    <Form.Control as="select" 
-                        value={system}
-                        onChange={handleChange}
-                        id="system"
-                    >
-                        <option value="Numenera">Numenera</option>
-                        <option value="The Strange">The Strange</option>
-                    </Form.Control>
-                </Form.Group>
-                <Form.Group>
-                    <Form.Label>Game Content</Form.Label>
-                    <Form.Control as="textarea"
-                        type="text" 
-                        placeholder="Enter Game Content"
-                        value={content}
-                        onChange={handleChange}
-                        id="content"
-                    />
-                </Form.Group>
-                <Button variant="primary" type='submit'>
-                    Create New Game
-                </Button>
-            </Form>
-        </div>
+    return (
+        <MDBContainer>
+            <MDBRow>
+                <MDBCol md="12" sm="12">
+                    <form className="authForm">
+                        <p className="h3 text-center mb-4">New Game</p>
+                        <div className="grey-text">
+                            <MDBInput label="Title" icon="dice" group type="text"  getValue={
+                                    (gameTitle) => handleChange(gameTitle,'title')
+                            }/>
+                            <div className="input-group">
+                                <div className="input-group-addon">
+                                    <MDBIcon icon="biohazard" size="2x" />
+                                </div>
+                                <select className="browser-default custom-select custom-setup grey-text" value={genre} onChange={(e) => setGenre(e.target.value)}>
+                                    <option>Genre</option>
+                                    <option value="Fantasy" className="purple-text">Fantasy</option>
+                                    <option value="Modern" className="purple-text">Modern</option>
+                                    <option value="Science Fiction" className="purple-text">Science Fiction</option>
+                                    <option value="Horror" className="purple-text">Horror</option>
+                                    <option value="Superheroes" className="purple-text">Superheroes</option>
+                                    <option value="Post-Apocalyptic" className="purple-text">Post-Apocalyptic</option>
+                                    <option value="Fairy Tale" className="purple-text">Fairy Tale</option>
+                                    <option value="Historical" className="purple-text">Historical</option>
+                                </select>
+                            </div>
+                            <MDBInput label="Description" icon="dragon" group  type="textarea"  getValue={
+                                (gameDescription) => handleChange(gameDescription,'description')
+                            } style={{height: 90}}/>
+                        </div>
+                        <div className="text-center">
+                            <MDBBtn color="mdb-color" onClick={onSubmit}>Create Game</MDBBtn>
+                            <br/>
+                            {
+                                error && 
+                                (<div className="red-text center" style={{padding:10}}>
+                                    <p>{error}</p>
+                                </div>)
+                            }
+                        </div>
+                    </form>
+                </MDBCol>
+            </MDBRow>
+        </MDBContainer>
     )
 }
 

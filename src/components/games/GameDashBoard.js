@@ -1,53 +1,72 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import {Redirect} from 'react-router-dom'
-import {firestoreConnect} from 'react-redux-firebase'
-import {compose} from 'redux'
-import {Container,Row,Col, Spinner} from 'react-bootstrap'
+import {useFirestoreConnect,isEmpty,isLoaded} from 'react-redux-firebase'
+import {MDBContainer,MDBCol,MDBRow} from 'mdbreact'
 
-const GameDashboard = ({auth, game}) => {
-    console.log(game)
+const GameDashboard = ({auth,match}) => {
+    const gameId = match.params.id
+    useFirestoreConnect([
+        {
+            collection: 'games',
+            doc: gameId
+        }
+    ])
+    const game = useSelector(state => state.firestore.data.games)
     if(!auth.uid) return <Redirect to='/login' />
-    if(game){
-        return (
-            <Container>
-                <Row>
-                    <Col sm={12} md={6}>
-                        <h3>Character Creator Modal</h3>
-                        <h3>Character List</h3>
-                    </Col>
-                    <Col sm={12} md={{span:5,offset: 1}}>
-                        <h3>Notification Bar</h3>
-                        <h3>Dice Rolling Emulator</h3>
-                    </Col>
-                </Row>
-            </Container>
-        )
-    }else {
+
+
+    if(!isLoaded(game)) {
         return (
             <div className="spinner">
-                <Spinner animation="border"></Spinner>
+                <strong>Loading Game</strong>
             </div>
         )
     }
+
+    if(isEmpty(game)) {
+        return (
+            <div className="spinner">
+                <h3>No Game Found</h3>
+            </div>
+        )
+    }
+
+    if(game){
+        const {title,description,owner,playerIds} = game[gameId]
+        if(playerIds.includes(auth.uid)){
+            return (
+                <MDBContainer>
+                    <MDBRow>
+                        <MDBCol md="12" sm="12">
+                            <h3>{title}</h3>
+                            <h4>GM - {owner} </h4>
+                        </MDBCol>
+                    </MDBRow>
+                    <MDBRow>
+                        <MDBCol md="6" sm="12">
+                            <span>{description}</span>
+                        </MDBCol>
+                        <MDBCol md='5' sm='12' className='offset-m1'>
+                            <h3>Current Characters</h3>
+                        </MDBCol>
+                    </MDBRow>
+                </MDBContainer>
+            )
+        }else{
+            return (
+                <div>
+                    <h1>Would You like to join this game</h1>
+                </div>
+            )
+        }
+    }
 }
 
-const mapStateToProps = (state, props) => {
-    const id = props.match.params.id
-    const games = state.firestore.data.games
-    const game = games ? games[id] : null
+const mapStateToProps = (state) => {
     return {
-        game:game,
         auth: state.firebase.auth
     }
 }
 
-export default compose(
-    connect(mapStateToProps),
-    firestoreConnect((props) => {
-        const uid = props.auth.uid
-        return [
-            {collection: 'games', where:['players', 'array-contains-any', [`${uid}`]]}
-        ]
-    })
-)(GameDashboard)
+export default connect(mapStateToProps)(GameDashboard)

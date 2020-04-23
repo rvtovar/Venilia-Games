@@ -1,15 +1,20 @@
-import React, {useState} from 'react'
-import {Form, Button} from 'react-bootstrap'
+import React, {useState,useEffect} from 'react'
+import {MDBContainer,MDBRow,MDBCol,MDBInput,MDBBtn} from 'mdbreact'
 import {connect} from 'react-redux'
-import {logIn} from '../../store/actions/authActions'
+import {logIn, clearAuthError} from '../../store/actions/authActions'
 import {Redirect} from 'react-router-dom'
 
-const SignIn = ({authError, logIn, auth}) => {
+const SignIn = ({authError, logIn, auth,clearAuthError}) => {
     let [email,setEmail] = useState('')
     let [password,setPassword] = useState('')
-    const handleChange = (e) => {
-        if(e.target.id === 'email') setEmail(e.target.value)
-        else if(e.target.id === 'password') setPassword(e.target.value)
+    useEffect(() => {
+        return () => {
+            clearAuthError()
+        }
+    },[clearAuthError])
+    const handleChange = (value,type) => {
+        if(type === 'email') setEmail(value)
+        else if(type === 'password') setPassword(value)
     }
     const onSubmit = (e) => {
         e.preventDefault()
@@ -18,45 +23,44 @@ const SignIn = ({authError, logIn, auth}) => {
 
     if(auth.uid) return <Redirect to='/' />
     return (
-        <div className="container authForm">
-            <h3>Log In</h3>
-            <Form onSubmit={onSubmit}>
-                <Form.Group>
-                    <Form.Label>Email Address</Form.Label>
-                    <Form.Control 
-                        type="email" 
-                        placeholder="Enter Email"
-                        value={email}
-                        onChange={handleChange}
-                        id="email"
-                    />
-                </Form.Group>
-                <Form.Group>
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control 
-                        type="password" 
-                        placeholder="Password"
-                        value={password}
-                        onChange={handleChange}
-                        id="password"
-                    />
-                </Form.Group>
-                <Button variant="primary" type='submit'>
-                    Log In
-                </Button>
-                {
-                    authError && 
-                    (<div className="text-danger text-center">
-                        <p>{authError}</p>
-                    </div>)
-                }
-            </Form>
-        </div>
+        <MDBContainer>
+            <MDBRow>
+                <MDBCol md="12" sm="12">
+                <form className="authForm">
+                    <p className="h3 text-center mb-4">Sign in</p>
+                    <div className="grey-text">
+                        <MDBInput 
+                            label="Type your email" 
+                            icon="dice" group 
+                            type="email" 
+                            getValue={userEmail => handleChange(userEmail,'email')} 
+                        />
+                        <MDBInput label="Type your password" 
+                            icon="dragon" group 
+                            type="password"
+                            getValue={pwd => handleChange(pwd,'password')}
+                        />
+                    </div>
+                    <div className="text-center">
+                        <MDBBtn onClick={onSubmit} color="mdb-color">Login</MDBBtn>
+                        <br/>
+                        {
+                            authError && 
+                            (<div className="red-text center" style={{padding:10}}>
+                                <p>{authError}</p>
+                            </div>)
+                        }
+                    </div>
+                </form>
+                </MDBCol>
+            </MDBRow>
+        </MDBContainer>
     )
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    logIn: (creds) => dispatch(logIn(creds))
+    logIn: (creds) => dispatch(logIn(creds)),
+    clearAuthError: () => dispatch(clearAuthError())
 })
 
 const mapStateToProps = (state) => ({
