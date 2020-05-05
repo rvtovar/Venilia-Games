@@ -2,13 +2,13 @@ import React from 'react'
 import GameForm from '../games/GameForm'
 import { connect } from 'react-redux'
 import {Redirect} from 'react-router-dom'
-import { createGame } from '../../store/actions/gameActions'
+import { createGame,clearData } from '../../store/actions/gameActions'
 
-const CreateGame = ({auth, createGame, history}) => {
+const CreateGame = ({auth, createGame, history, clearData}) => {
     if(!auth.uid) return <Redirect to='/login' />
     
-    const addGame = (game) => {
-        createGame(game)
+    const addGame = async (game) => {
+         await createGame(game)
         history.push('/')
     }
     return (
@@ -21,7 +21,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    createGame: (game) => dispatch(createGame(game))
+    createGame: (game) => dispatch(createGame(game)),
+    clearData: () => dispatch(clearData())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateGame)

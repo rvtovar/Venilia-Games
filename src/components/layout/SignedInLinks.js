@@ -17,6 +17,9 @@ const SigedInLinks = ({logOut, profile}) => {
                     <MDBNavLink to='/create'>New Game</MDBNavLink>
                 </MDBNavItem>
                 <MDBNavItem>
+                    <MDBNavLink to='/search'>Search</MDBNavLink>
+                </MDBNavItem>
+                <MDBNavItem>
                     <MDBNavLink to='/about'>About</MDBNavLink>
                 </MDBNavItem>
             </MDBNavbarNav>

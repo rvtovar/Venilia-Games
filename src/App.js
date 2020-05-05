@@ -4,7 +4,8 @@ import Home from './components/pages/Home'
 import About from './components/pages/About'
 import CreateGame from './components/pages/CreateGame'
 import EditGame from './components/pages/EditGame'
-import GameDashboard from './components/games/GameDashBoard'
+import Game from './components/pages/Game'
+import Search from './components/pages/Search'
 import SignIn from './components/auth/SignIn'
 import SignUp from './components/auth/SignUp'
 import NotFound from './components/pages/404'
@@ -20,7 +21,8 @@ function App() {
           <Route component={About} path='/about' />
           <Route component={CreateGame} path='/create' />
           <Route component={EditGame} path='/games/edit/:id' />
-          <Route component={GameDashboard} path='/games/:id' />
+          <Route component={Game} path='/games/:id' />
+          <Route component={Search} path='/search' />
           <Route component={SignIn} path='/login' />
           <Route component={SignUp} path='/signup' />
           <Route component={NotFound} />

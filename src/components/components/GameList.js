@@ -1,16 +1,16 @@
 import React from 'react'
-import GameSummary from './GameSummary'
-import {MDBCard} from 'mdbreact'
-import {List} from '../components/Utils'
+import {List} from './Utils'
 
-const GameList = ({games, title}) => {
+const GameList = ({games, title, Item}) => {
     return (
         <div className="game-list section">
-            <p className="h3 text-center mb-4 listTitle">{title}</p>
+            {
+                title && <p className="h3 text-center mb-4 listTitle">{title}</p>
+            }
             <List>
                 {
                     games && games.map(game => (
-                        <GameSummary 
+                        <Item
                             key={game.id}
                             game={game}
                         />

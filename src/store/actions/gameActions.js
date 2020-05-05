@@ -1,11 +1,11 @@
 import firebase from 'firebase/app'
 
 export const createGame = (game) => {
-    return (dispatch,getState) => {
+    return async (dispatch,getState) => {
         const profile = getState().firebase.profile
         const ownerId = getState().firebase.auth.uid
 
-        firebase.firestore().collection('games').add({
+        await firebase.firestore().collection('games').add({
             ...game,
             owner: profile.displayName,
             ownerId: ownerId,
@@ -17,6 +17,26 @@ export const createGame = (game) => {
         }).catch((err) => {
             dispatch({
                 type: 'CREATE_GAME_ERROR',
+                err
+            })
+        })
+
+    }
+}
+
+export const joinGame = (game) => {
+    return (dispatch,getState) => {
+        const playerId = getState().firebase.auth.uid
+        const gameRef = firebase.firestore().collection('games').doc(game.id)
+        gameRef.update({
+            playerIds: [...game.playerIds,playerId]
+        }).then(() => {
+            dispatch({
+                type:'JOIN_GAME'
+            })
+        }).catch((err) => {
+            dispatch({
+                type:'JOIN_GAME_ERROR',
                 err
             })
         })

@@ -5,25 +5,28 @@ import {useFirestoreConnect, isEmpty,isLoaded} from 'react-redux-firebase'
 import {MDBContainer,MDBRow,MDBCol} from 'mdbreact'
 import GameList from '../components/GameList'
 import {clearData} from '../../store/actions/gameActions'
-import GameItem from '../components/GameItem'
+import GameFilter from '../games/GameFilter'
+import filter from '../../store/selector/selector'
+import SearchItem from '../components/SearchItem'
 
-const Home = ({auth,clearData}) => {
+const Search = ({auth,clearData,filters}) => {
+    console.log(filters)
     useFirestoreConnect([
-        {collection: 'games', where:['playerIds', 'array-contains', `${auth.uid}`]}
+        {collection: 'games'}
     ])
     useEffect(() => {
         return () => {
             clearData()
         }
     },[clearData])
-    
-    const userGames = useSelector(state => state.firestore.ordered.games)
+
+    const games = useSelector(state => state.firestore.ordered.games)
 
 
     if(!auth.uid) return <Redirect to='/login' />
 
 
-    if (!isLoaded(userGames)) {
+    if (!isLoaded(games)) {
         return (
             <div className="spinner">
 
@@ -32,27 +35,23 @@ const Home = ({auth,clearData}) => {
       }
     
       // Show message if there are no todos
-    if (isEmpty(userGames)) {
+    if (isEmpty(games)) {
         return (
             <div className="spinner">
-                <h3>No Recent Games.</h3>
+                <h3>No Games Found</h3>
             </div>
         )
     }
     return (
-        <MDBContainer>
-            <MDBRow>
-                <MDBCol sm="12" md="6">
+        <MDBContainer >
+            <MDBRow style={{justifyContent:'center'}}>
+                <MDBCol sm="12" md="12">
+                    <p className="h3 text-center mb-4" style={{marginTop: 30}}>Find a Game</p>
+                    <GameFilter />
                     <GameList 
-                        games={userGames}
-                        title="Recent Games"
-                        Item={GameItem}
+                        games={filter(games,filters)}
+                        Item={SearchItem}
                     />
-                </MDBCol>
-                <MDBCol>
-                    <div className="game-list section">
-                        <p className="h3 text-center mb-4 listTitle">Upcoming Games</p>
-                    </div>
                 </MDBCol>
             </MDBRow>
         </MDBContainer>
@@ -60,10 +59,11 @@ const Home = ({auth,clearData}) => {
 }
 
 const mapStateToProps = (state) => ({
-    auth: state.firebase.auth
+    auth: state.firebase.auth,
+    filters:state.filters
 })
 const mapDispatchToProps = (dispatch) => ({
     clearData: () => dispatch(clearData())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home)
+export default connect(mapStateToProps, mapDispatchToProps)(Search)

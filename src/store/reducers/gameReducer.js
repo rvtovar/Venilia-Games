@@ -14,6 +14,16 @@ export default (state = initState, action) => {
                 ...state,
                 gameError:'Oops something went wrong'
             }
+        case 'JOIN_GAME':
+            return {
+                ...state,
+                gameError: null
+            }
+        case 'JOIN_GAME_ERROR':
+            return {
+                ...state,
+                gameError: 'Sorry couldnt join game'
+            }
         default:
             return state
     }
