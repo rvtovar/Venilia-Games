@@ -2,7 +2,7 @@ import React, {useEffect} from 'react'
 import { connect, useSelector } from 'react-redux'
 import {Redirect} from 'react-router-dom'
 import {useFirestoreConnect,isEmpty,isLoaded} from 'react-redux-firebase'
-import Dashboard from '../games/Dashboard'
+import Dashboard from '../dashboard/Dashboard'
 import GameDetails from '../games/GameDetails'
 import {clearData} from '../../store/actions/gameActions'
 

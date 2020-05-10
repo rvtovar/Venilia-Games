@@ -44,9 +44,9 @@ const Home = ({auth,clearData}) => {
             <MDBRow>
                 <MDBCol sm="12" md="6">
                     <GameList 
-                        games={userGames}
+                        items={userGames}
                         title="Recent Games"
-                        Item={GameItem}
+                        Component={GameItem}
                     />
                 </MDBCol>
                 <MDBCol>

@@ -1,7 +1,7 @@
 import React from 'react'
 import {List} from './Utils'
 
-const GameList = ({games, title, Item}) => {
+const GameList = ({items, title, Component}) => {
     return (
         <div className="game-list section">
             {
@@ -9,10 +9,10 @@ const GameList = ({games, title, Item}) => {
             }
             <List>
                 {
-                    games && games.map(game => (
-                        <Item
-                            key={game.id}
-                            game={game}
+                    items && items.map(item => (
+                        <Component
+                            key={item.id}
+                            item={item}
                         />
                     ))
                 }

@@ -49,8 +49,8 @@ const Search = ({auth,clearData,filters}) => {
                     <p className="h3 text-center mb-4" style={{marginTop: 30}}>Find a Game</p>
                     <GameFilter />
                     <GameList 
-                        games={filter(games,filters)}
-                        Item={SearchItem}
+                        items={filter(games,filters)}
+                        Component={SearchItem}
                     />
                 </MDBCol>
             </MDBRow>
