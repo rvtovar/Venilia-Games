@@ -1,7 +1,7 @@
 import React from 'react'
 import {
     MDBNavbarNav,MDBNavItem,MDBNavLink,MDBDropdown,
-    MDBDropdownToggle, MDBIcon
+    MDBDropdownToggle, MDBIcon, MDBDropdownItem, MDBDropdownMenu,MDBLink
 } from 'mdbreact'
 import {logOut} from '../../store/actions/authActions'
 import {connect} from 'react-redux'
@@ -14,10 +14,9 @@ const SigedInLinks = ({logOut, profile}) => {
                     <MDBNavLink to='/'>Home</MDBNavLink>
                 </MDBNavItem>
                 <MDBNavItem>
-                    <MDBNavLink to='/create'>New Game</MDBNavLink>
-                </MDBNavItem>
-                <MDBNavItem>
-                    <MDBNavLink to='/search'>Search</MDBNavLink>
+                    <MDBNavLink to='/search'>
+                    <MDBIcon icon='search'/>  Search
+                    </MDBNavLink>
                 </MDBNavItem>
                 <MDBNavItem>
                     <MDBNavLink to='/about'>About</MDBNavLink>
@@ -26,9 +25,26 @@ const SigedInLinks = ({logOut, profile}) => {
             <MDBNavbarNav right>
                 <MDBNavItem>
                     <MDBDropdown>
-                        <MDBDropdownToggle nav>
+                        <MDBDropdownToggle nav caret>
                             <MDBIcon icon="user"/> {profile.displayName}
                         </MDBDropdownToggle>
+                        <MDBDropdownMenu>
+                            <MDBDropdownItem >
+                                <MDBLink to='#' className="black-text">
+                                    <MDBIcon icon="user-edit"/>  Profile
+                                </MDBLink>
+                            </MDBDropdownItem>
+                            <MDBDropdownItem>
+                                <MDBLink to="/newChar" className="black-text">
+                                    <MDBIcon icon="user-ninja" />  New Character
+                                </MDBLink>
+                            </MDBDropdownItem>
+                            <MDBDropdownItem>
+                                <MDBLink to='/create' className="black-text">
+                                    <MDBIcon icon="dice-d20"/>  New Campaign
+                                </MDBLink>
+                            </MDBDropdownItem>
+                        </MDBDropdownMenu>
                     </MDBDropdown>
                 </MDBNavItem>
                 <MDBNavItem>

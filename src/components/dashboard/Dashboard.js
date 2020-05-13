@@ -1,40 +1,23 @@
-import React,{useEffect} from 'react'
+import React from 'react'
 import {MDBContainer,MDBCol,MDBRow} from 'mdbreact'
-import {connect} from 'react-redux'
-import CharForm from './CharForm'
 import MainHub from './MainHub'
 import DashboardSideBar from './DashboardSideBar'
-import {setHomeToggle} from '../../store/actions/dashboardActions'
 
-const Dashboard = ({game, charToggle,setHomeToggle}) => {
-    // const {title,owner,id} = game
-    useEffect(() => {
-        return () => setHomeToggle()
-    }, [setHomeToggle])
-    
+const Dashboard = ({game}) => {
+    const {title} = game
     return (
         <MDBContainer>
             <MDBRow>
                 <MDBCol md="1">
-                    <DashboardSideBar />
+                    <DashboardSideBar title={title}/>
                 </MDBCol>
                 <MDBCol md="11">
-                   {
-                        charToggle ? <CharForm /> : <MainHub />
-                   }
+                   <MainHub />
                 </MDBCol>
             </MDBRow>
         </MDBContainer>
     )
 }
 
-const mapStateToProps = (state) => ({
-    charToggle: state.dashboard.charToggle
-})
 
-const mapDispatchToProps = (dispatch) => ({
-    setHomeToggle: () => dispatch(setHomeToggle())
-})
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)
+export default Dashboard

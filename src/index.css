@@ -4,8 +4,10 @@ body {
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  overflow-y: scroll !important;
 }
+
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
@@ -128,10 +130,16 @@ form button, form h5{
 
 .sidebar {
   overflow: hidden;
-  background-color: #333;
+  background-color: #ffffff;
   left: 0;
   position: fixed; /* Set the navbar to fixed position *//* Position the navbar at the top of the page */
   width: 100%; /* Full width */
+}
+
+.sidebar-title{
+  border: none;
+  font-size: large;
+  padding: 10;
 }
 
 @media (max-width: 1199.98px) {

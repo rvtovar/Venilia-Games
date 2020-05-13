@@ -30,7 +30,7 @@ const GameForm = ({gameSubmit}) => {
             <MDBRow>
                 <MDBCol md="12" sm="12">
                     <form className="authForm">
-                        <p className="h3 text-center mb-4">New Game</p>
+                        <p className="h3 text-center mb-4">New Campaign</p>
                         <div className="grey-text">
                             <MDBInput label="Title" icon="dice" group type="text"  getValue={
                                     (gameTitle) => handleChange(gameTitle,'title')
@@ -56,7 +56,7 @@ const GameForm = ({gameSubmit}) => {
                             } style={{height: 90}}/>
                         </div>
                         <div className="text-center">
-                            <MDBBtn color="mdb-color" onClick={onSubmit}>Create Game</MDBBtn>
+                            <MDBBtn color="mdb-color" onClick={onSubmit}>Create</MDBBtn>
                             <br/>
                             {
                                 error && 
