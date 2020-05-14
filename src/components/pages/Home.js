@@ -6,10 +6,18 @@ import {MDBContainer,MDBRow,MDBCol} from 'mdbreact'
 import GameList from '../components/GameList'
 import {clearData} from '../../store/actions/gameActions'
 import GameItem from '../components/GameItem'
+import {objToArr} from '../../helper/helper'
+
+
+
 
 const Home = ({auth,clearData}) => {
     useFirestoreConnect([
-        {collection: 'games', where:['playerIds', 'array-contains', `${auth.uid}`]}
+        {
+            collection:'players', 
+            where:['player','==',auth.uid], 
+            populates:[{child:'game',root:'games'}]
+        }
     ])
     useEffect(() => {
         return () => {
@@ -17,7 +25,7 @@ const Home = ({auth,clearData}) => {
         }
     },[clearData])
     
-    const userGames = useSelector(state => state.firestore.ordered.games)
+    const userGames = useSelector(state => state.firestore.data.games)
 
 
     if(!auth.uid) return <Redirect to='/login' />
@@ -39,12 +47,15 @@ const Home = ({auth,clearData}) => {
             </div>
         )
     }
+
+    let games = objToArr(userGames)
+    console.log(games)
     return (
         <MDBContainer>
             <MDBRow>
                 <MDBCol sm="12" md="6">
                     <GameList 
-                        items={userGames}
+                        items={games}
                         title="Recent Games"
                         Component={GameItem}
                     />

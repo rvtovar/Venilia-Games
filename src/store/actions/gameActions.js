@@ -9,7 +9,11 @@ export const createGame = (game) => {
             ...game,
             owner: profile.displayName,
             ownerId: ownerId,
-            playerIds: [ownerId]
+        }).then(async (docRef) => {
+            return await firebase.firestore().collection('players').add({
+                player:ownerId,
+                game: docRef.id,
+            })
         }).then(() => {
             dispatch({
                 type: 'CREATE_GAME'

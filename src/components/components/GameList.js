@@ -11,7 +11,7 @@ const GameList = ({items, title, Component}) => {
                 {
                     items && items.map(item => (
                         <Component
-                            key={item.id}
+                            key={Math.random()}
                             item={item}
                         />
                     ))

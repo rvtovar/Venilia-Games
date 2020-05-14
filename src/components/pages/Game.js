@@ -10,8 +10,12 @@ const Game = ({auth,match, clearData}) => {
     const gameId = match.params.id
     useFirestoreConnect([
         {
-            collection: 'games',
-            doc: gameId
+           collection: 'games',
+           doc: gameId
+        },
+        {
+            collection:'players',
+            where:['game','==',gameId]
         }
     ])
     
@@ -22,6 +26,7 @@ const Game = ({auth,match, clearData}) => {
     },[clearData])
 
     const game = useSelector(state => state.firestore.ordered.games)
+    const players = useSelector(state => state.firestore.ordered.players)
     if(!auth.uid) return <Redirect to='/login' />
 
 
@@ -42,12 +47,13 @@ const Game = ({auth,match, clearData}) => {
     }
 
     if(game){
-        const {playerIds} = game[0]
-        if(playerIds.includes(auth.uid)){
-            return <Dashboard game={game[0]} />
-        }else{
-            return <GameDetails game={game[0]} />
-        }
+        console.log(game[0])
+        return <Dashboard game={game[0]}/>
+        // if(playerIds.includes(auth.uid)){
+        //     return <Dashboard game={game[0]} />
+        // }else{
+        //     return <GameDetails game={game[0]} />
+        // }
     }
 }
 
