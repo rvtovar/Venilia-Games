@@ -1,12 +1,15 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import {
     MDBNavbarNav,MDBNavItem,MDBNavLink,MDBDropdown,
     MDBDropdownToggle, MDBIcon, MDBDropdownItem, MDBDropdownMenu,MDBLink
 } from 'mdbreact'
 import {logOut} from '../../store/actions/authActions'
-import {connect} from 'react-redux'
+import {useDispatch} from 'react-redux'
 
-const SigedInLinks = ({logOut, profile}) => {
+const SigedInLinks = ({profile}) => {
+    const dispatch = useDispatch()
+    const signOut = useCallback(() => dispatch(logOut()),[dispatch]) 
+
     return (
         <>
             <MDBNavbarNav left>
@@ -48,7 +51,7 @@ const SigedInLinks = ({logOut, profile}) => {
                     </MDBDropdown>
                 </MDBNavItem>
                 <MDBNavItem>
-                    <MDBNavLink onClick={logOut} to='#'>
+                    <MDBNavLink onClick={signOut} to='#'>
                         Sign Out
                     </MDBNavLink>
                 </MDBNavItem>
@@ -57,8 +60,8 @@ const SigedInLinks = ({logOut, profile}) => {
     )
 }
 
-const MapDispatchToProps = (dispatch) => ({
-    logOut: () => dispatch(logOut())
-})
+// const MapDispatchToProps = (dispatch) => ({
+//     logOut: () => dispatch(logOut())
+// })
 
-export default connect(undefined,MapDispatchToProps)(SigedInLinks)
+export default SigedInLinks

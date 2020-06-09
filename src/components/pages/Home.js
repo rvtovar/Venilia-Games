@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react'
-import { connect, useSelector} from 'react-redux'
+import React, {useEffect, useCallback} from 'react'
+import {useSelector, useDispatch} from 'react-redux'
 import {Redirect} from 'react-router-dom'
 import {useFirestoreConnect, isEmpty,isLoaded} from 'react-redux-firebase'
 import {MDBContainer,MDBRow,MDBCol} from 'mdbreact'
@@ -11,27 +11,27 @@ import {objToArr} from '../../helper/helper'
 
 
 
-const Home = ({auth,clearData}) => {
+const Home = () => {
+    const auth = useSelector(state => state.firebase.auth)
     useFirestoreConnect([
         {
-            collection:'players', 
-            where:['player','==',auth.uid], 
-            populates:[{child:'game',root:'games'}]
+            collection:'players',  
+            populates:[{child:'game',root:'games'}],
+            where: ['player','==', `${auth.uid}`]
         }
     ])
+    const dispatch = useDispatch()
+    const clear = useCallback(() => dispatch(clearData()), [dispatch])
     useEffect(() => {
         return () => {
-            clearData()
+            clear()
         }
-    },[clearData])
-    
+    },[clear])
+    const players = useSelector(state => state.firestore.ordered.players)
     const userGames = useSelector(state => state.firestore.data.games)
 
-
     if(!auth.uid) return <Redirect to='/login' />
-
-
-    if (!isLoaded(userGames)) {
+    if (!isLoaded(players)) {
         return (
             <div className="spinner">
 
@@ -40,7 +40,7 @@ const Home = ({auth,clearData}) => {
       }
     
       // Show message if there are no todos
-    if (isEmpty(userGames)) {
+    if (isEmpty(players)) {
         return (
             <div className="spinner">
                 <h3>No Recent Games.</h3>
@@ -49,7 +49,6 @@ const Home = ({auth,clearData}) => {
     }
 
     let games = objToArr(userGames)
-    console.log(games)
     return (
         <MDBContainer>
             <MDBRow>
@@ -70,11 +69,11 @@ const Home = ({auth,clearData}) => {
     )
 }
 
-const mapStateToProps = (state) => ({
-    auth: state.firebase.auth
-})
-const mapDispatchToProps = (dispatch) => ({
-    clearData: () => dispatch(clearData())
-})
+// const mapStateToProps = (state) => ({
+//     auth: state.firebase.auth
+// })
+// const mapDispatchToProps = (dispatch) => ({
+//     clearData: () => dispatch(clearData())
+// })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home)
+export default Home

@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react'
-import { connect, useSelector} from 'react-redux'
+import React, {useEffect, useCallback} from 'react'
+import { useSelector, useDispatch} from 'react-redux'
 import {Redirect} from 'react-router-dom'
 import {useFirestoreConnect, isEmpty,isLoaded} from 'react-redux-firebase'
 import {MDBContainer,MDBRow,MDBCol} from 'mdbreact'
@@ -9,17 +9,20 @@ import GameFilter from '../games/GameFilter'
 import filter from '../../store/selector/selector'
 import SearchItem from '../components/SearchItem'
 
-const Search = ({auth,clearData,filters}) => {
-    console.log(filters)
+const Search = () => {
+    const auth = useSelector(state => state.firebase.auth)
     useFirestoreConnect([
         {collection: 'games'}
     ])
+
+    const dispatch = useDispatch()
+    const clear = useCallback(() => dispatch(clearData()), [dispatch])
     useEffect(() => {
         return () => {
-            clearData()
+            clear()
         }
-    },[clearData])
-
+    },[clear])
+    const filters = useSelector(state => state.filters)
     const games = useSelector(state => state.firestore.ordered.games)
 
 
@@ -58,12 +61,12 @@ const Search = ({auth,clearData,filters}) => {
     )
 }
 
-const mapStateToProps = (state) => ({
-    auth: state.firebase.auth,
-    filters:state.filters
-})
-const mapDispatchToProps = (dispatch) => ({
-    clearData: () => dispatch(clearData())
-})
+// const mapStateToProps = (state) => ({
+//     auth: state.firebase.auth,
+//     filters:state.filters
+// })
+// const mapDispatchToProps = (dispatch) => ({
+//     clearData: () => dispatch(clearData())
+// })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Search)
+export default Search

@@ -1,28 +1,30 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import GameForm from '../games/GameForm'
-import { connect } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import {Redirect} from 'react-router-dom'
-import { createGame,clearData } from '../../store/actions/gameActions'
+import { createGame } from '../../store/actions/gameActions'
 
-const CreateGame = ({auth, createGame, history, clearData}) => {
-    if(!auth.uid) return <Redirect to='/login' />
-    
+const CreateGame = ({ history}) => {
+    const auth = useSelector(state => state.firebase.auth)
+    const dispatch = useDispatch()
+    const create = useCallback((game) => dispatch(createGame(game)), [dispatch])
     const addGame = async (game) => {
-         await createGame(game)
+         await create(game)
         history.push('/')
     }
+    if(!auth.uid) return <Redirect to='/login' />
     return (
         <GameForm gameSubmit={addGame}/>
     )
 }
 
-const mapStateToProps = (state) => ({
-    auth: state.firebase.auth
-})
+// const mapStateToProps = (state) => ({
+//     auth: state.firebase.auth
+// })
 
-const mapDispatchToProps = (dispatch) => ({
-    createGame: (game) => dispatch(createGame(game)),
-    clearData: () => dispatch(clearData())
-})
+// const mapDispatchToProps = (dispatch) => ({
+//     createGame: (game) => dispatch(createGame(game)),
+//     clearData: () => dispatch(clearData())
+// })
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateGame)
+export default CreateGame

@@ -1,12 +1,13 @@
-import React, {useEffect} from 'react'
-import { connect, useSelector } from 'react-redux'
+import React, {useEffect, useCallback} from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import {Redirect} from 'react-router-dom'
 import {useFirestoreConnect,isEmpty,isLoaded} from 'react-redux-firebase'
 import Dashboard from '../dashboard/Dashboard'
 import GameDetails from '../games/GameDetails'
 import {clearData} from '../../store/actions/gameActions'
 
-const Game = ({auth,match, clearData}) => {
+const Game = ({match}) => {
+    const auth = useSelector(state => state.firebase.auth)
     const gameId = match.params.id
     useFirestoreConnect([
         {
@@ -15,22 +16,26 @@ const Game = ({auth,match, clearData}) => {
         },
         {
             collection:'players',
-            where:['game','==',gameId]
+            where:['game','==',`${gameId}`],
+            populates: [{child:'player',root:'displayNames'}]
         }
     ])
     
+    const dispatch = useDispatch()
+    const clear = useCallback(() => dispatch(clearData()), [dispatch])
     useEffect(() => {
         return () => {
-            clearData()
+            clear()
         }
-    },[clearData])
+    },[clear])
 
     const game = useSelector(state => state.firestore.ordered.games)
     const players = useSelector(state => state.firestore.ordered.players)
+    
     if(!auth.uid) return <Redirect to='/login' />
 
 
-    if(!isLoaded(game)) {
+    if(!isLoaded(game) || !isLoaded(players)) {
         return (
             <div className="spinner">
 
@@ -46,25 +51,22 @@ const Game = ({auth,match, clearData}) => {
         )
     }
 
-    if(game){
-        console.log(game[0])
-        return <Dashboard game={game[0]}/>
-        // if(playerIds.includes(auth.uid)){
-        //     return <Dashboard game={game[0]} />
-        // }else{
-        //     return <GameDetails game={game[0]} />
-        // }
+    const player = players.filter(({player}) => player === auth.uid)
+    if(isEmpty(player)){
+        return <GameDetails game={game[0]} />
     }
+
+    return <Dashboard game={game[0]} />
 }
 
-const mapStateToProps = (state) => {
-    return {
-        auth: state.firebase.auth
-    }
-}
+// const mapStateToProps = (state) => {
+//     return {
+//         auth: state.firebase.auth
+//     }
+// }
 
-const mapDispatchToProps = (dispatch) => ({
-    clearData: () => dispatch(clearData())
-})
+// const mapDispatchToProps = (dispatch) => ({
+//     clearData: () => dispatch(clearData())
+// })
 
-export default connect(mapStateToProps,mapDispatchToProps)(Game)
+export default Game

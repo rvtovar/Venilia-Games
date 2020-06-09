@@ -6,10 +6,7 @@ const AuthIsLoaded = ({children}) => {
     const auth = useSelector(
       (state) => state.firebase.auth
     )
-    const profile = useSelector(
-      (state) => state.firebase.profile
-    )
-    if(!isLoaded(auth) && !isLoaded(profile)){
+    if(!isLoaded(auth)){
       return (
         <div className='mx-auto spinner'>
 

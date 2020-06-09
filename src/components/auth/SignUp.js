@@ -1,19 +1,30 @@
-import React, {useState,useEffect} from 'react'
+import React, {useState,useEffect, useCallback} from 'react'
 import {MDBContainer,MDBRow,MDBCol,MDBInput,MDBBtn} from 'mdbreact'
-import {connect} from 'react-redux'
+import {useSelector, useDispatch} from 'react-redux'
 import {signUp, clearAuthError} from '../../store/actions/authActions'
 import {Redirect} from 'react-router-dom'
 
-const SignUp = ({authError, signUp, auth, clearAuthError}) => {
+const SignUp = () => {
     let [email,setEmail] = useState('')
     let [password,setPassword] = useState('')
     let [firstName,setFirstName] = useState('')
     let [lastName,setLastName] = useState('')
+
+    
+    const auth = useSelector(state => state.firebase.auth)
+    const error = useSelector(state => state.auth.authError)
+
+    const dispatch = useDispatch()
+    const join = useCallback((creds) => dispatch(signUp(creds)), [dispatch])
+    const clearError = useCallback(() => dispatch(clearAuthError()), [dispatch])
+
     useEffect(() => {
         return () => {
-            clearAuthError()
+            clearError()
         }
-    },[clearAuthError])
+    },[clearError])
+
+
     const handleChange = (value,type) => {
         if(type === 'email') setEmail(value)
         else if(type === 'password') setPassword(value)
@@ -22,7 +33,7 @@ const SignUp = ({authError, signUp, auth, clearAuthError}) => {
     }
     const onSubmit = (e) => {
         e.preventDefault()
-        signUp({email,password,firstName,lastName})
+        join({email,password,firstName,lastName})
     }
 
     if(auth.uid) return <Redirect to='/' />
@@ -50,9 +61,9 @@ const SignUp = ({authError, signUp, auth, clearAuthError}) => {
                     <MDBBtn color="mdb-color" onClick={onSubmit}>Register</MDBBtn>
                     <br/>
                     {
-                        authError && 
+                        error && 
                         (<div className="red-text center" style={{padding:10}}>
-                            <p>{authError}</p>
+                            <p>{error}</p>
                         </div>)
                     }
                     </div>
@@ -63,14 +74,14 @@ const SignUp = ({authError, signUp, auth, clearAuthError}) => {
     )
 }
 
-const mapStateToProps = (state) => ({
-    authError: state.auth.authError,
-    auth: state.firebase.auth
-})
+// const mapStateToProps = (state) => ({
+//     authError: state.auth.authError,
+//     auth: state.firebase.auth
+// })
 
-const mapDispatchToProps = (dispatch) => ({
-    signUp: (newUser) => dispatch(signUp(newUser)),
-    clearAuthError: () => dispatch(clearAuthError())
-})
+// const mapDispatchToProps = (dispatch) => ({
+//     signUp: (newUser) => dispatch(signUp(newUser)),
+//     clearAuthError: () => dispatch(clearAuthError())
+// })
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignUp)
+export default SignUp

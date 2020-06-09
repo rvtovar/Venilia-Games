@@ -1,12 +1,15 @@
-import React from 'react'
-import {connect} from 'react-redux'
+import React, {useCallback} from 'react'
+import {useDispatch} from 'react-redux'
 import {setSearchFilter} from '../../store/actions/filterAcitons'
 import {MDBInput} from 'mdbreact'
 
 
-const GameFilter = ({setSearchFilter}) => {
+const GameFilter = () => {
+    const dispatch = useDispatch()
+    const setFilter = useCallback((value) => dispatch(setSearchFilter(value)), [dispatch])
+
     const handleChange = (value,type) => {
-        if(type === 'search') setSearchFilter(value)
+        if(type === 'search') setFilter(value)
     }
 
     return (
@@ -20,11 +23,11 @@ const GameFilter = ({setSearchFilter}) => {
 
 
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        setSearchFilter: (searchItem) => dispatch(setSearchFilter(searchItem))
-    }
-}
+// const mapDispatchToProps = (dispatch) => {
+//     return {
+//         setSearchFilter: (searchItem) => dispatch(setSearchFilter(searchItem))
+//     }
+// }
 
 
-export default connect(undefined,mapDispatchToProps)(GameFilter)
+export default GameFilter

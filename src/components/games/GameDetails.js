@@ -1,10 +1,14 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import {MDBContainer, MDBBtn, MDBCard,MDBCardTitle,MDBCardBody,MDBCardHeader,MDBCardText} from 'mdbreact'
-import {connect} from 'react-redux'
+import {useDispatch} from 'react-redux'
 import {joinGame} from '../../store/actions/gameActions'
 
-const GameDetails = ({game,joinGame}) => {
+const GameDetails = ({game}) => {
+    const dispatch = useDispatch()
+    const join = useCallback((game) => dispatch(joinGame(game)), [dispatch])
+
     const {title,description,genre} = game
+    
     return (
         <MDBContainer>
             <MDBCard className="gameCard z-depth-0">
@@ -19,7 +23,7 @@ const GameDetails = ({game,joinGame}) => {
                         {description}
                     </MDBCardText>
                     <MDBBtn onClick={
-                        () => joinGame(game)
+                        () => join(game)
                     }>
                         Join Game
                     </MDBBtn>
@@ -29,9 +33,9 @@ const GameDetails = ({game,joinGame}) => {
     )
 }
 
-const mapDispatchToProps = (dispatch) => ({
-    joinGame: (game) => dispatch(joinGame(game))
-})
+// const mapDispatchToProps = (dispatch) => ({
+//     joinGame: (game) => dispatch(joinGame(game))
+// })
 
-export default connect(undefined,mapDispatchToProps)(GameDetails)
+export default GameDetails
 

@@ -30,10 +30,10 @@ export const createGame = (game) => {
 
 export const joinGame = (game) => {
     return (dispatch,getState) => {
-        const playerId = getState().firebase.auth.uid
-        const gameRef = firebase.firestore().collection('games').doc(game.id)
-        gameRef.update({
-            playerIds: [...game.playerIds,playerId]
+        const userId = getState().firebase.auth.uid
+        firebase.firestore().collection('players').add({
+            game:game.id,
+            player:userId
         }).then(() => {
             dispatch({
                 type:'JOIN_GAME'
@@ -42,6 +42,23 @@ export const joinGame = (game) => {
             dispatch({
                 type:'JOIN_GAME_ERROR',
                 err
+            })
+        })
+    }
+}
+
+export const leaveGame = () => {
+    return (dispatch, getState) => {
+        const userId = getState().firebase.auth.uid
+        const players = getState().firestore.ordered.players
+        const playerId = players.filter(({player}) => player === userId)[0].id
+        firebase.firestore().collection('players').doc(playerId).delete().then(() => {
+            dispatch({
+                type: 'LEFT_GAME'
+            })
+        }).catch((err) => {
+            dispatch({
+                type: 'LEFT_GAME_ERROR'
             })
         })
     }

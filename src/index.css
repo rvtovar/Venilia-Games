@@ -138,8 +138,31 @@ form button, form h5{
 
 .sidebar-title{
   border: none;
+  font-size: x-large;
+  padding: 10;
+}
+
+.sidebar-names{
+  border: none;
+  font-size: medium;
+  padding: 10;
+}
+
+.sidebar-section{
+  border: none;
   font-size: large;
   padding: 10;
+}
+
+.leave{
+  background-color: white;
+  border: none;
+  color: blueviolet;
+  font-size: medium;
+}
+
+.title_border{
+  border-bottom: solid black 1px;
 }
 
 @media (max-width: 1199.98px) {

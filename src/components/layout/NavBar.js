@@ -2,11 +2,15 @@ import React, {useState} from 'react'
 import SignedInLinks from './SignedInLinks'
 import SignedOutLinks from './SignedOutLinks'
 import {MDBNavbar, MDBNavbarBrand, MDBNavbarToggler, MDBCollapse} from 'mdbreact'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 
-const NavBar = ({auth, profile}) => {
+const NavBar = () => {
     const [isOpen, setIsOpen] = useState(false)
+    const auth = useSelector(state => state.firebase.auth)
+    const profile = useSelector(state => state.firebase.profile)
+
     const links = auth.uid ? <SignedInLinks profile={profile}/> : <SignedOutLinks />
+
     return (
         <MDBNavbar dark expand="md" color="special-color">
             <MDBNavbarBrand>
@@ -20,9 +24,9 @@ const NavBar = ({auth, profile}) => {
     )
 }
 
-const mapStateToProps = (state) => ({
-    auth: state.firebase.auth,
-    profile: state.firebase.profile
-})
+// const mapStateToProps = (state) => ({
+//     auth: state.firebase.auth,
+//     profile: state.firebase.profile
+// })
 
-export default connect(mapStateToProps)(NavBar)
+export default NavBar

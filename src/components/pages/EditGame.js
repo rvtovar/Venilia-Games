@@ -1,8 +1,9 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import {useSelector} from 'react-redux'
 import {Redirect} from 'react-router-dom'
 
-const EditGame = ({auth}) => {
+const EditGame = () => {
+    const auth = useSelector(state => state.firebase.auth)
     if(!auth.uid) return <Redirect to='/login' />
     return (
         <div>
@@ -11,8 +12,8 @@ const EditGame = ({auth}) => {
     )
 }
 
-const mapStateToProps = (state) => ({
-    auth: state.firebase.auth
-})
+// const mapStateToProps = (state) => ({
+//     auth: state.firebase.auth
+// })
 
-export default connect(mapStateToProps)(EditGame)
+export default EditGame

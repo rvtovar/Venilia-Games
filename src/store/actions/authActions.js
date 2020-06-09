@@ -42,6 +42,9 @@ export const signUp = (newUser) => {
             newUser.email,
             newUser.password
         ).then((res) => {
+            firebase.firestore().collection('displayNames').doc(res.user.uid).set({
+                displayName: `${newUser.firstName}.${newUser.lastName[0]}`
+            })
             return firebase.firestore().collection('users')
                 .doc(res.user.uid).set({
                     firstName: newUser.firstName,

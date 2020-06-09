@@ -22,7 +22,17 @@ export default (state = initState, action) => {
         case 'JOIN_GAME_ERROR':
             return {
                 ...state,
-                gameError: 'Sorry couldnt join game'
+                gameError: `Sorry couldn't join game`
+            }
+        case 'LEFT_GAME':
+            return {
+                ...state,
+                gameError: null
+            }
+        case 'LEFT_GAME_ERROR':
+            return {
+                ...state,
+                gameError: `Sorry Couldn't Leave Game`
             }
         default:
             return state
